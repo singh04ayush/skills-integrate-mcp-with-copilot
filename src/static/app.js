@@ -4,14 +4,52 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
+  // Add filter, sort, and search controls
+  const controlsDiv = document.createElement("div");
+  controlsDiv.style.marginBottom = "20px";
+  controlsDiv.innerHTML = `
+    <label>Category:
+      <select id="filter-category">
+        <option value="">All</option>
+        <option value="Games">Games</option>
+        <option value="STEM">STEM</option>
+        <option value="Sports">Sports</option>
+      </select>
+    </label>
+    <label style="margin-left:10px;">Sort:
+      <select id="sort-by">
+        <option value="">None</option>
+        <option value="name">Name</option>
+        <option value="date">Date</option>
+      </select>
+    </label>
+    <label style="margin-left:10px;">Search:
+      <input type="text" id="search-text" placeholder="Search activities..." />
+    </label>
+    <button id="apply-filters" style="margin-left:10px;">Apply</button>
+  `;
+  activitiesList.parentElement.insertBefore(controlsDiv, activitiesList);
+
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
-      const response = await fetch("/activities");
+      // Get filter/sort/search values
+      const category = document.getElementById("filter-category").value;
+      const sort = document.getElementById("sort-by").value;
+      const search = document.getElementById("search-text").value;
+      let url = "/activities";
+      const params = [];
+      if (category) params.push(`category=${encodeURIComponent(category)}`);
+      if (sort) params.push(`sort=${encodeURIComponent(sort)}`);
+      if (search) params.push(`search=${encodeURIComponent(search)}`);
+      if (params.length) url += `?${params.join("&")}`;
+
+      const response = await fetch(url);
       const activities = await response.json();
 
-      // Clear loading message
+      // Clear loading message and dropdown
       activitiesList.innerHTML = "";
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
@@ -153,6 +191,13 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
     }
+  });
+
+  // Apply filters button
+  document.getElementById("apply-filters").addEventListener("click", fetchActivities);
+  // Also allow pressing Enter in search box to trigger
+  document.getElementById("search-text").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") fetchActivities();
   });
 
   // Initialize app

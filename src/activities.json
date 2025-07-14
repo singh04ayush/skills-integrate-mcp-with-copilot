@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Chess Club",
+    "category": "Games",
+    "description": "Play chess with other students.",
+    "schedule": "Fridays after school",
+    "date": "2025-09-05",
+    "max_participants": 20,
+    "participants": []
+  },
+  {
+    "name": "Programming Class",
+    "category": "STEM",
+    "description": "Learn to code in Python.",
+    "schedule": "Mondays after school",
+    "date": "2025-09-08",
+    "max_participants": 25,
+    "participants": []
+  },
+  {
+    "name": "Gym Class",
+    "category": "Sports",
+    "description": "Stay fit and have fun.",
+    "schedule": "Wednesdays after school",
+    "date": "2025-09-10",
+    "max_participants": 30,
+    "participants": []
+  }
+]
